@@ -1,5 +1,6 @@
-Backend API for portfolio-app
-* Leetcode heatmap 
+Backend APIs for portfolio-app
+![img.png](img.png)
+![img_1.png](img_1.png)
 <h3>How to setup</h3>
 *  .\venv\Scripts\activate
 *  cd django_project
