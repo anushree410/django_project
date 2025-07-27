@@ -3,5 +3,5 @@ services:
     name: django-project
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn django_project.wsgi:application
+    startCommand: cd django_project && gunicorn django_project.wsgi:application --bind 0.0.0.0:$PORT
     autoDeploy: true

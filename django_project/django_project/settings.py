@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-g3lyy6r1+961*&$906_!_#3mq8j4zfk2uhj1%9#oqzq1no$-zf
 DEBUG = True
 
 ALLOWED_HOSTS = ["django-project-ekwx.onrender.com",
-                 '127.0.0.1']
+                 '127.0.0.1', "localhost"]
 
 
 # Application definition
