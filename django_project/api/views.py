@@ -55,7 +55,6 @@ def leetcode_proxy(request):
                 headers=headers
             )
 
-            # Try to return JSON if possible
             try:
                 print("RESPONSE",str(res))
                 r=make_date_count_response(res.json()['data']['matchedUser']['userCalendar']['submissionCalendar'])
