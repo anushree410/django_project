@@ -1,6 +1,6 @@
 ## Backend APIs for portfolio-app :
 https://django-project-ekwx.onrender.com/docs/
-_(Note: instance spins down with inactivity, which can delay requests by 50 seconds or more.)
+_(Note: instance spins down with inactivity, which can delay requests by 50 seconds or more.)_
 ![img.png](img.png)
 ![img_1.png](img_1.png)
 
