@@ -27,21 +27,42 @@ username_param = openapi.Schema(
             }
         ),
     },
+        "username": openapi.Schema(
 )
-
 
 @csrf_exempt
 @swagger_auto_schema(
     method='post',
     request_body=username_param,
-    operation_description="Post a LeetCode GraphQL query to get the user's submission calendar",
+    operation_description="Get LeetCode user's submission calendar by username",
     responses={200: 'Returns date-wise submission counts'},
 )
 @api_view(["POST"])
 def leetcode_proxy(request):
     if request.method == 'POST':
         try:
-            req_data = json.loads(request.body)
+            data = json.loads(request.body)
+            username = data.get("username")
+
+            if not username:
+                return JsonResponse({'error': 'Username is required'}, status=400)
+
+            # Build GraphQL query internally
+            graphql_query = {
+                "query": """
+                    query userProblemsSolved($username: String!) {
+                        matchedUser(username: $username) {
+                            userCalendar {
+                                submissionCalendar
+                            }
+                        }
+                    }
+                """,
+                "variables": {
+                    "username": username
+                }
+            }
+
             headers = {
                 'Content-Type': 'application/json',
                 'Referer': 'https://leetcode.com',
@@ -51,21 +72,25 @@ def leetcode_proxy(request):
 
             res = requests.post(
                 'https://leetcode.com/graphql/',
-                json=req_data,
+                json=graphql_query,
                 headers=headers
             )
 
             try:
-                print("RESPONSE",str(res))
-                r=make_date_count_response(res.json()['data']['matchedUser']['userCalendar']['submissionCalendar'])
-                return JsonResponse(json.dumps(r), safe=False)
+                r = make_date_count_response(
+                    res.json()['data']['matchedUser']['userCalendar']['submissionCalendar']
+                )
+                return JsonResponse(r, safe=False)
             except ValueError:
-                return JsonResponse({'error': 'Invalid JSON in response', 'text': res.text}, status=502)
+                return JsonResponse(
+                    {'error': 'Invalid JSON in response', 'text': res.text},
+                    status=502
+                )
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-    else:
-        return JsonResponse({'error': 'Only POST method allowed'}, status=405)
+
+    return JsonResponse({'error': 'Only POST method allowed'}, status=405)
 
 '''
 curl --location 'http://localhost:8000/api/leetcode' \
