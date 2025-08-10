@@ -6,6 +6,19 @@ from .logic import make_date_count_response
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+# from flask import Flask, request, jsonify
+# import your_core_logic
+#
+#
+# app = Flask(__name__)
+#
+# @app.route('/run', methods=['POST'])
+# def run_code():
+#     data = request.json
+#     result = your_core_logic.do_something(data['input'])
+#     return jsonify({'result': result})
+
+
 
 username_param = openapi.Schema(
     type=openapi.TYPE_OBJECT,
@@ -88,3 +101,4 @@ curl --location 'http://localhost:8000/api/leetcode' \
 "variables": { "username": "rock_llama" }
 }'
 '''
+
