@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+# from dotenv import load_dotenv
+#
+# load_dotenv()
+import environ
+env = environ.Env()
+environ.Env.read_env()
+
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,7 +50,8 @@ INSTALLED_APPS = [
     "api",
     'corsheaders',
     'drf_yasg',
-    'rest_framework_swagger'
+    'rest_framework_swagger',
+    'chatbot'
 ]
 
 MIDDLEWARE = [

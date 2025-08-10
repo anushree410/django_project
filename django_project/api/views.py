@@ -9,25 +9,13 @@ from drf_yasg import openapi
 
 username_param = openapi.Schema(
     type=openapi.TYPE_OBJECT,
-    required=["query", "variables"],
+    required=["username"],
     properties={
-        "query": openapi.Schema(type=openapi.TYPE_STRING, example="""
-            query userProblemsSolved($username: String!) {
-                matchedUser(username: $username) {
-                    userCalendar {
-                        submissionCalendar
-                    }
-                }
-            }
-        """),
-        "variables": openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties={
-                "username": openapi.Schema(type=openapi.TYPE_STRING, example="rock_llama")
-            }
-        ),
-    },
         "username": openapi.Schema(
+            type=openapi.TYPE_STRING,
+            example="rock_llama"
+        )
+    }
 )
 
 @csrf_exempt
