@@ -1,19 +1,18 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+
 export default function ChatbotUI() {
   const [messages, setMessages] = useState([
     { text: "Hi! How can I help you today?", sender: "bot" },
   ]);
   const [input, setInput] = useState("");
   const API_BASE_URL = window.location.origin;
+  const messagesEndRef = useRef(null);
 
   const sendMessage = async () => {
-    console.log("sending ...")
-    console.log(window.location)
-
     if (!input.trim()) return;
-    console.log(API_BASE_URL)
+
     const newMessage = { text: input, sender: "user" };
-    setMessages([...messages, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
     setInput("");
 
     try {
@@ -23,8 +22,11 @@ export default function ChatbotUI() {
         body: JSON.stringify({ message: input }),
       });
       const data = await res.json();
-      setMessages((prev) => [...prev, { text: data.answer, sender: "bot" }]);
-    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { text: data.answer || "No response", sender: "bot" },
+      ]);
+    } catch {
       setMessages((prev) => [
         ...prev,
         { text: "⚠️ Server error. Try again.", sender: "bot" },
@@ -32,46 +34,46 @@ export default function ChatbotUI() {
     }
   };
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4">
+    <div className="flex flex-col h-screen bg-[#f7f7f8]">
+      <div className="flex-1 overflow-y-auto px-4 py-6">
         {messages.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`flex mb-2 ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
-          >
+          <div key={idx} className={`flex mb-4 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
             <div
-              className={`px-4 py-2 rounded-lg max-w-xs ${
+              className={`max-w-[75%] px-4 py-3 rounded-2xl shadow-sm text-sm leading-relaxed whitespace-pre-wrap ${
                 msg.sender === "user"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-300 text-black"
+                  ? "bg-blue-500 text-white rounded-br-none"
+                  : "bg-white text-gray-900 border rounded-bl-none"
               }`}
             >
               {msg.text}
             </div>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Box */}
-      <div className="p-4 bg-white flex">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="flex-1 border rounded-lg px-4 py-2 mr-2 focus:outline-none"
-          placeholder="Type your message..."
-          onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-        />
-        <button
-          onClick={sendMessage}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-        >
-          Send
-        </button>
+      <div className="border-t border-gray-200 p-4 bg-white sticky bottom-0">
+        <div className="flex items-center gap-2">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), sendMessage())}
+            placeholder="Send a message..."
+            rows={1}
+            className="flex-1 resize-none border rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300 text-black"
+          />
+          <button
+            onClick={sendMessage}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );
