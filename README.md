@@ -10,7 +10,7 @@ _(Note: instance spins down with inactivity, which can delay requests by 50 seco
    _(Make sure you've already created one using `python -m venv .venv`)_
 
    ```bash
-   .\.venv\Scripts\activate       # On Windows
+   venv\Scripts\activate       # On Windows
    source .venv/bin/activate      # On macOS/Linux
 
 2. Navigate to the Django project directory
