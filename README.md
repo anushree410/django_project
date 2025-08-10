@@ -13,15 +13,16 @@ _(Note: instance spins down with inactivity, which can delay requests by 50 seco
    .\.venv\Scripts\activate       # On Windows
    source .venv/bin/activate      # On macOS/Linux
 
-2. Install required dependencies
-   ```bash
-   pip install -r requirements.txt
-   
-3. Navigate to the Django project directory
+2. Navigate to the Django project directory
     ```bash
     cd django_project
+
+3. Install required dependencies
+   ```bash
+   pip install -r requirements.txt
 
 4. Run the development server
     ```bash
     python manage.py runserver
+
 5. Open your browser and visit http://localhost:8000
