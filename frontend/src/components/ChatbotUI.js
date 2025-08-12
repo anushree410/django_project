@@ -16,7 +16,7 @@ export default function ChatbotUI() {
     setInput("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/chatbot/ask/`, {
+      const res = await fetch(`${API_BASE_URL}/chatbot/ask/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: input }),

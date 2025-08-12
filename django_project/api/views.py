@@ -6,6 +6,10 @@ from .logic import make_date_count_response
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from django.contrib.auth.models import User
 # from flask import Flask, request, jsonify
 # import your_core_logic
 #
@@ -102,3 +106,19 @@ curl --location 'http://localhost:8000/api/leetcode' \
 }'
 '''
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def profile(request):
+    return Response({"message": f"Hello, {request.user.username}!"})
+
+
+@api_view(['POST'])
+def register_user(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    if not username or not password:
+        return Response({'error': 'Username and password required'}, status=status.HTTP_400_BAD_REQUEST)
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    User.objects.create_user(username=username, password=password)
+    return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)

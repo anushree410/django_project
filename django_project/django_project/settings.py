@@ -103,6 +103,17 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  # for cookie-based login
+        'rest_framework.authentication.TokenAuthentication',    # for token-based login
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+
 WSGI_APPLICATION = "django_project.wsgi.application"
 
 
