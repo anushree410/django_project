@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 # from flask import Flask, request, jsonify
@@ -23,22 +23,14 @@ from django.contrib.auth.models import User
 #     return jsonify({'result': result})
 
 
-
-username_param = openapi.Schema(
-    type=openapi.TYPE_OBJECT,
-    required=["username"],
-    properties={
-        "username": openapi.Schema(
-            type=openapi.TYPE_STRING,
-            example="rock_llama"
-        )
-    }
-)
-
 @csrf_exempt
 @swagger_auto_schema(
     method='post',
-    request_body=username_param,
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=["username"],
+        properties={"username": openapi.Schema( type=openapi.TYPE_STRING,example="rock_llama" )}
+    ),
     operation_description="Get LeetCode user's submission calendar by username",
     responses={200: 'Returns date-wise submission counts'},
 )
@@ -112,13 +104,27 @@ def profile(request):
     return Response({"message": f"Hello, {request.user.username}!"})
 
 
+@swagger_auto_schema(
+    method='post',
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        required=["username", "password"],
+        properties={
+            "username": openapi.Schema(type=openapi.TYPE_STRING, example="anushree"),
+            "password": openapi.Schema(type=openapi.TYPE_STRING, example="5671")
+        }
+    ),
+    operation_description="Register a new user",
+    responses={200: 'Returns success response'},
+)
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register_user(request):
     username = request.data.get('username')
     password = request.data.get('password')
     if not username or not password:
-        return Response({'error': 'Username and password required'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': 'Username and password required'}, status=400)
     if User.objects.filter(username=username).exists():
-        return Response({'error': 'Username already exists'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'detail': 'Username already exists'}, status=400)
     User.objects.create_user(username=username, password=password)
-    return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+    return Response({'message': 'User created successfully'}, status=201)
