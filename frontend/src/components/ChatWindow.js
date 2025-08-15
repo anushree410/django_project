@@ -37,7 +37,7 @@ export default function ChatWindow({ sessionId }) {
       }
     );
     const data = await res.json();
-    setMessages((prev) => [...prev, { sender: "bot", text: data.reply }]);
+    setMessages((prev) => [...prev, { sender: "bot", text: data.answer }]);
   };
 
   if (loading) return <div className="flex-1 p-4">Loading...</div>;
