@@ -28,13 +28,13 @@ from django.core.management import call_command
     operation_description="Get list of users (admin-only)"
 )
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([AllowAny])
 def list_users(request):
-    """Returns a list of all users (id + username). Only for admin/staff."""
     users = User.objects.all().values('id', 'username')
     return Response(list(users))
 
 def create_admin(request):
+    call_command("makemigrations")
     call_command("migrate")
 
     if not User.objects.filter(username="admin").exists():
