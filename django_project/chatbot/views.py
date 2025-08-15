@@ -132,3 +132,14 @@ def list_sessions(request):
     sessions = ChatSession.objects.filter(user=request.user).order_by("-created_at")
     data = [{"id": s.id, "created_at": s.created_at} for s in sessions]
     return Response(data)
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def delete_session(request, session_id):
+    """
+    Deletes a single chat session and all related messages
+    for the current user.
+    """
+    session = get_object_or_404(ChatSession, id=session_id, user=request.user)
+    session.delete()
+    return Response({"message": "Session deleted"})

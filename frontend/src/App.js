@@ -1,5 +1,4 @@
 import './App.css';
-import ChatbotUI from './components/ChatbotUI';
 import AuthPage from './components/AuthPage';
 import ChatLayout from "./components/ChatLayout";
 import {

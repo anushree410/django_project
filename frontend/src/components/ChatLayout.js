@@ -28,7 +28,7 @@ export default function ChatLayout() {
   }, []);
 
   const createSession = async () => {
-  console.log("TOKEN :" +localStorage.getItem('accessToken'))
+    console.log("TOKEN :" +localStorage.getItem('accessToken'))
     const res = await fetch(`${API_BASE_URL}/chatbot/session/create/`, {
       method: "POST",
       headers: {
@@ -41,6 +41,22 @@ export default function ChatLayout() {
     setSessions(prev => [data, ...prev]);
     setActiveSessionId(data.id);
   };
+
+  const deleteSession = async (sessionId) => {
+    const res = await fetch(`${API_BASE_URL}/chatbot/session/${sessionId}/delete/`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+    if (res.ok) {
+      setSessions(prev => prev.filter(s => s.id !== sessionId));
+      if (activeSessionId === sessionId) {
+        setActiveSessionId(null); // reset if current one was deleted
+      }
+    }
+  };
+
   useEffect(() => {
     if (activeSessionId !== null) {
       console.log("✅ New active session:", activeSessionId);
@@ -48,13 +64,16 @@ export default function ChatLayout() {
   }, [activeSessionId]);
   return (
     <div className="flex h-screen">
-      <Sidebar
-        sessions={sessions}
-        activeId={activeSessionId}
-        onSelect={setActiveSessionId}
-        onNew={createSession}
-      />
-      {activeSessionId && <ChatWindow sessionId={activeSessionId} />}
+      <div className="flex-none w-60 bg-gray-200 p-4 overflow-y-auto">
+        <Sidebar sessions={sessions}
+            activeId={activeSessionId}
+            onSelect={setActiveSessionId}
+            onNew={createSession}
+            onDelete={deleteSession}/>
+      </div>
+      <div className="flex-1">
+         {activeSessionId && <ChatWindow sessionId={activeSessionId} />}
+      </div>
     </div>
   );
 }
