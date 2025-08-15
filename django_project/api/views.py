@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
@@ -35,15 +35,12 @@ def list_users(request):
     return Response(list(users))
 
 def create_admin(request):
-    """
-    Creates a Django superuser (admin/admin123) if it doesn't exist yet.
-    Call this once on Render, then remove it.
-    """
     call_command("migrate")
+
     if not User.objects.filter(username="admin").exists():
         User.objects.create_superuser("admin", "admin@example.com", "admin123")
-        return Response({"✅ Superuser created successfully."}, status=200)
-    return Response("ℹ️ Superuser already exists.", status=200)
+        return HttpResponse("✅ Superuser created successfully.")
+    return HttpResponse("ℹ️ Superuser already exists.")
 
 @csrf_exempt
 @swagger_auto_schema(
