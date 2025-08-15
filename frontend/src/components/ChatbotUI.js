@@ -1,38 +1,25 @@
 import { useState, useRef, useEffect } from "react";
 
-export default function ChatbotUI() {
-  const [messages, setMessages] = useState([
-    { text: "Hi! How can I help you today?", sender: "bot" },
-  ]);
+export default function ChatbotUI({ messages, setMessages, sendMessage }) {
   const [input, setInput] = useState("");
-  const API_BASE_URL = window.location.origin;
   const messagesEndRef = useRef(null);
 
-  const sendMessage = async () => {
+  const handleSend = () => {
     if (!input.trim()) return;
-
-    const newMessage = { text: input, sender: "user" };
-    setMessages((prev) => [...prev, newMessage]);
+    const text = input;
+    console.log("handle send",text);
     setInput("");
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/chatbot/ask/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
-      });
-      const data = await res.json();
-      setMessages((prev) => [
-        ...prev,
-        { text: data.answer || "No response", sender: "bot" },
-      ]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { text: "⚠️ Server error. Try again.", sender: "bot" },
-      ]);
-    }
+    sendMessage(text);
   };
+
+  useEffect(() => {
+    console.log("CHATBOT Ui",messages);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+
+  const API_BASE_URL = window.location.origin;
+
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -41,7 +28,7 @@ export default function ChatbotUI() {
   return (
     <div className="flex flex-col h-screen bg-[#f7f7f8]">
       <div className="flex-1 overflow-y-auto px-4 py-6">
-        {messages.map((msg, idx) => (
+        { messages && messages.map((msg, idx) => (
           <div key={idx} className={`flex mb-4 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
             <div
               className={`max-w-[75%] px-4 py-3 rounded-2xl shadow-sm text-sm leading-relaxed whitespace-pre-wrap ${
@@ -62,13 +49,14 @@ export default function ChatbotUI() {
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), sendMessage())}
+            onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();handleSend();} }}
             placeholder="Send a message..."
             rows={1}
             className="flex-1 resize-none border rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300 text-black"
           />
           <button
-            onClick={sendMessage}
+            onClick={handleSend}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
           >
             Send

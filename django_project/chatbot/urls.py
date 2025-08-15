@@ -1,9 +1,22 @@
 from django.urls import path
-from .views import session_history, create_session, ask_chatbot
+from .views import session_history, create_session, ask_chatbot, list_sessions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from rest_framework.permissions import AllowAny
+schema_view = get_schema_view(
+    openapi.Info(
+        title="My API",
+        default_version='v1',
+        description="API docs",
+    ),
+    public=True,
+    permission_classes=(AllowAny,),
+    authentication_classes=[],
+)
 
 urlpatterns = [
-    # path('ask/', ask_chatbot, name='chatbot-response'),
-    path("session/", create_session),
+    path("session/", list_sessions),
+    path("session/create/", create_session),
     path("session/<int:session_id>/ask/", ask_chatbot),
     path("session/<int:session_id>/history/", session_history),
 ]

@@ -9,26 +9,32 @@ from rest_framework import status
 import os
 from groq import Groq
 from django.http import JsonResponse
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from .models import ChatSession, ChatMessage
-
+from django.shortcuts import get_object_or_404
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 @csrf_exempt
 @swagger_auto_schema(
     method='post',
+    operation_description="Send a message to the chatbot for a specific session",
     request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
-        required=["query", "variables"],
+        required=["message"],
         properties={
-            "message":  openapi.Schema(type=openapi.TYPE_STRING, example="hi bot!")
+            "message": openapi.Schema(type=openapi.TYPE_STRING, example="Hello!")
         }
     ),
-    operation_description="Post a question",
-    responses={200: 'Returns a response'},
+    responses={200: openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "answer": openapi.Schema(type=openapi.TYPE_STRING, example="Hi, how can I help you?")
+        }
+    )}
 )
 @api_view(['POST'])
-def ask_chatbot(request):
+@permission_classes([IsAuthenticated])
+def ask_chatbot(request, session_id):
     user_message = request.data.get("message", "")
     session = get_object_or_404(ChatSession, id=session_id, user=request.user)
     if not user_message:
@@ -60,12 +66,38 @@ def ask_chatbot(request):
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+@swagger_auto_schema(
+    method='post',
+    operation_description="Create a new chat session for the authenticated user",
+    responses={201: openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            "id": openapi.Schema(type=openapi.TYPE_INTEGER, example=3)
+        }
+    )}
+)
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_session(request):
     session = ChatSession.objects.create(user=request.user)
-    return Response({"session_id": session.id})
+    return Response({"id": session.id})
 
+@swagger_auto_schema(
+    method='get',
+    operation_description="Get history of a particular chat session",
+    responses={200: openapi.Schema(
+        type=openapi.TYPE_ARRAY,
+        items=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "sender": openapi.Schema(type=openapi.TYPE_STRING, example="user"),
+                "text": openapi.Schema(type=openapi.TYPE_STRING, example="Hello"),
+                "timestamp": openapi.Schema(type=openapi.TYPE_STRING, format="date-time")
+            }
+        )
+    )}
+)
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def session_history(request, session_id):
@@ -79,3 +111,24 @@ def session_history(request, session_id):
         for msg in session.messages.order_by("timestamp")
     ]
     return Response(history)
+
+@swagger_auto_schema(
+    method='get',
+    operation_description="List all chat sessions for the authenticated user",
+    responses={200: openapi.Schema(
+        type=openapi.TYPE_ARRAY,
+        items=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                "id": openapi.Schema(type=openapi.TYPE_INTEGER, example=1),
+                "created_at": openapi.Schema(type=openapi.TYPE_STRING, format="date-time")
+            }
+        )
+    )}
+)
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def list_sessions(request):
+    sessions = ChatSession.objects.filter(user=request.user).order_by("-created_at")
+    data = [{"id": s.id, "created_at": s.created_at} for s in sessions]
+    return Response(data)
