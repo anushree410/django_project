@@ -39,8 +39,8 @@ def create_admin(request):
     Creates a Django superuser (admin/admin123) if it doesn't exist yet.
     Call this once on Render, then remove it.
     """
+    call_command("migrate")
     if not User.objects.filter(username="admin").exists():
-        call_command("migrate")
         User.objects.create_superuser("admin", "admin@example.com", "admin123")
         return Response({"✅ Superuser created successfully."}, status=200)
     return Response("ℹ️ Superuser already exists.", status=200)
