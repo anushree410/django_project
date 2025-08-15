@@ -10,6 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from django.core.management import call_command
 # from flask import Flask, request, jsonify
 # import your_core_logic
 #
@@ -22,7 +23,10 @@ from django.contrib.auth.models import User
 #     result = your_core_logic.do_something(data['input'])
 #     return jsonify({'result': result})
 # --- TEMPORARY SUPERUSER ENDPOINT (remove after first use) -------------------
-
+@swagger_auto_schema(
+    method='get',
+    operation_description="Get list of users (admin-only)"
+)
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def list_users(request):
@@ -36,6 +40,7 @@ def create_admin(request):
     Call this once on Render, then remove it.
     """
     if not User.objects.filter(username="admin").exists():
+        call_command("migrate")
         User.objects.create_superuser("admin", "admin@example.com", "admin123")
         return Response({"✅ Superuser created successfully."}, status=200)
     return Response("ℹ️ Superuser already exists.", status=200)
