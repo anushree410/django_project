@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 # from flask import Flask, request, jsonify
@@ -21,7 +21,24 @@ from django.contrib.auth.models import User
 #     data = request.json
 #     result = your_core_logic.do_something(data['input'])
 #     return jsonify({'result': result})
+# --- TEMPORARY SUPERUSER ENDPOINT (remove after first use) -------------------
 
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def list_users(request):
+    """Returns a list of all users (id + username). Only for admin/staff."""
+    users = User.objects.all().values('id', 'username')
+    return Response(list(users))
+
+def create_admin(request):
+    """
+    Creates a Django superuser (admin/admin123) if it doesn't exist yet.
+    Call this once on Render, then remove it.
+    """
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser("admin", "admin@example.com", "admin123")
+        return Response({"✅ Superuser created successfully."}, status=200)
+    return Response("ℹ️ Superuser already exists.", status=200)
 
 @csrf_exempt
 @swagger_auto_schema(
