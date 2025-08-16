@@ -23,7 +23,7 @@ export default function Sidebar({ sessions, activeId, onSelect, onNew, onDelete}
              <span className="flex-1 truncate px-2">Session {s.id}</span>
              <button
                onClick={() => onDelete(s.id)}
-               className="px-2 text-red-400"
+               className="px-2 text-gray-400"
                title="Delete"
              >
                ✖

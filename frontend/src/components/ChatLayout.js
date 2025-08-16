@@ -62,6 +62,7 @@ export default function ChatLayout() {
       console.log("✅ New active session:", activeSessionId);
     }
   }, [activeSessionId]);
+
   return (
     <div className="flex h-screen">
       <div className="flex-none w-60 bg-[#202123] text-white overflow-y-auto flex flex-col space-y-2">

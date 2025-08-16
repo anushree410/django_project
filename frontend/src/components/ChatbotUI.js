@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { LuSendHorizontal } from "react-icons/lu";
 
 export default function ChatbotUI({ messages, setMessages, sendMessage }) {
   const [input, setInput] = useState("");
@@ -59,13 +60,13 @@ export default function ChatbotUI({ messages, setMessages, sendMessage }) {
             }}
             placeholder="Send a message..."
             rows={1}
-            className="flex-1 resize-none border rounded-lg px-4 py-2 bg-[#444654] focus:outline-none focus:ring focus:ring-[#19c37d]/50 text-white"
+            className="flex-1 resize-none rounded-lg px-4 py-2 bg-[#343541] focus:outline-none focus:ring focus:ring-[#19c37d]/50 text-white text-sm"
           />
           <button
             onClick={handleSend}
-            className="bg-[#19c37d] hover:opacity-90 text-white px-4 py-2 rounded-lg transition-colors"
+            className="bg-[#343541] hover:opacity-90 text-white px-4 py-2 rounded-lg transition-colors"
           >
-            Send
+            <LuSendHorizontal />
           </button>
         </div>
       </div>
