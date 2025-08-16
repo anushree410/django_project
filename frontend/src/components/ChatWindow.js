@@ -43,7 +43,7 @@ export default function ChatWindow({ sessionId }) {
   if (loading) return <div className="flex-1 p-4">Loading...</div>;
 
   return (
-    <div className="flex-1 flex flex-col bg-[#f7f7f8]">
+    <div className=" w-full bg-[#f7f7f8]">
       <ChatbotUI
          messages={messages}
          setMessages={setMessages}
