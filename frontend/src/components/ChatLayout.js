@@ -71,8 +71,14 @@ export default function ChatLayout() {
             onNew={createSession}
             onDelete={deleteSession}/>
       </div>
-      <div className="flex-1">
-         {activeSessionId && <ChatWindow sessionId={activeSessionId} />}
+      <div className="flex-1 flex ">
+        {activeSessionId ? (
+          <ChatWindow sessionId={activeSessionId} />
+        ) : (
+          <div className="flex-1 flex items-center justify-center text-gray-400">
+            Select or create a session to start chatting
+          </div>
+        )}
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ export default function ChatbotUI({ messages, setMessages, sendMessage }) {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-screen bg-[#f7f7f8]">
+    <div className="flex flex-col h-full bg-[#f7f7f8]">
       <div className="flex-1 overflow-y-auto px-4 py-6">
         { messages && messages.map((msg, idx) => (
           <div key={idx} className={`flex mb-4 ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>

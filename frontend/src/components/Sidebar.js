@@ -3,7 +3,7 @@ import {useEffect} from "react";
 export default function Sidebar({ sessions, activeId, onSelect, onNew, onDelete}) {
   useEffect(() => {console.log('inside Side bar'); });
     return (
-      <div className="w-60 bg-gray-200 p-4 overflow-y-auto">
+      <div className="w-60 bg-gray-200 p-4 overflow-y-auto items-center">
         <button
           onClick={onNew}
           className="mb-4 w-full bg-blue-500 text-white text-sm py-2 rounded"
