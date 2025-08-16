@@ -18,9 +18,6 @@ export default function ChatbotUI({ messages, setMessages, sendMessage }) {
   }, [messages]);
 
 
-  const API_BASE_URL = window.location.origin;
-
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

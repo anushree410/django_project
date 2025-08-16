@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import ChatWindow from "../components/ChatWindow";
+const API_BASE_URL = window.location.origin;
 
 export default function ChatLayout() {
-  const API_BASE_URL = window.location.origin;
   const [sessions, setSessions] = useState([]);
   const [activeSessionId, setActiveSessionId] = useState(null);
 
