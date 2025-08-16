@@ -64,14 +64,16 @@ export default function ChatLayout() {
   }, [activeSessionId]);
   return (
     <div className="flex h-screen">
-      <div className="flex-none w-60 bg-gray-200 p-4 overflow-y-auto">
-        <Sidebar sessions={sessions}
-            activeId={activeSessionId}
-            onSelect={setActiveSessionId}
-            onNew={createSession}
-            onDelete={deleteSession}/>
+      <div className="flex-none w-60 bg-[#202123] text-white overflow-y-auto flex flex-col space-y-2">
+        <Sidebar
+          sessions={sessions}
+          activeId={activeSessionId}
+          onSelect={setActiveSessionId}
+          onNew={createSession}
+          onDelete={deleteSession}
+        />
       </div>
-      <div className="flex-1 flex ">
+      <div className="flex-1 h-screen flex">
         {activeSessionId ? (
           <ChatWindow sessionId={activeSessionId} />
         ) : (

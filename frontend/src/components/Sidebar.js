@@ -3,27 +3,34 @@ import {useEffect} from "react";
 export default function Sidebar({ sessions, activeId, onSelect, onNew, onDelete}) {
   useEffect(() => {console.log('inside Side bar'); });
     return (
-      <div className="w-60 bg-gray-200 overflow-y-auto items-center ">
-        <button
-          onClick={onNew}
+     <div className="w-60 bg-[#202123] text-white overflow-y-auto flex flex-col space-y-2 p-2">
+       <button
+         onClick={onNew}
+         className="w-full truncate bg-transparent text-white text-sm py-2 rounded"
+       >
+         + New Chat
+       </button>
 
-          className="mb-4 w-full truncate bg-blue-500 text-white text-sm py-2 rounded"
-        >
-          + New Chat
-        </button>
+       {Array.isArray(sessions) &&
+         sessions.map((s) => (
+           <div
+             key={s.id}
+             onClick={() => onSelect(s.id)}
+             className={`cursor-pointer rounded text-sm flex items-center justify-between ${
+               s.id === activeId ? "bg-[#343541]" : "bg-transparent"
+             }`}
+           >
+             <span className="flex-1 truncate px-2">Session {s.id}</span>
+             <button
+               onClick={() => onDelete(s.id)}
+               className="px-2 text-red-400"
+               title="Delete"
+             >
+               ✖
+             </button>
+           </div>
+         ))}
+     </div>
 
-        {Array.isArray(sessions) && sessions.map((s) => (
-          <div
-            key={s.id}
-            onClick={() => onSelect(s.id)}
-            className={`cursor-pointer mb-2 rounded text-black text-sm ${ s.id === activeId ? "bg-white" : "bg-gray-300"} `}
-          >
-            Session {s.id}
-             <button onClick={() => onDelete(s.id)} className="text-gray-600 ml-2 p-2" title="Delete" >
-                      ✖</button>
-          </div>
-
-        ))}
-      </div>
     );
   }
