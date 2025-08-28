@@ -64,25 +64,31 @@ export default function ChatLayout() {
   }, [activeSessionId]);
 
   return (
-    <div className="flex h-screen">
-      <div className="flex-none w-60 bg-[#202123] text-white overflow-y-auto flex flex-col space-y-2">
-        <Sidebar
-          sessions={sessions}
-          activeId={activeSessionId}
-          onSelect={setActiveSessionId}
-          onNew={createSession}
-          onDelete={deleteSession}
-        />
-      </div>
-      <div className="flex-1 h-screen flex">
+    <div className="flex h-screen overflow-hidden bg-[#202123]">
+      {/* Sticky sidebar */}
+      <aside className="w-60 bg-[#202123] text-white border-r border-gray-800 sticky top-0 h-screen">
+        <div className="h-full overflow-y-auto overflow-x-hidden">
+          <Sidebar
+            sessions={sessions}
+            activeId={activeSessionId}
+            onSelect={setActiveSessionId}
+            onNew={createSession}
+            onDelete={deleteSession}
+          />
+        </div>
+      </aside>
+
+      {/* Chat pane */}
+      <main className="flex-1 flex min-h-0">
         {activeSessionId ? (
           <ChatWindow sessionId={activeSessionId} />
         ) : (
-          <div className="flex-1 flex items-center justify-center text-gray-400">
+          <div className="flex-1 min-h-0 flex items-center justify-center text-gray-400">
             Select or create a session to start chatting
           </div>
         )}
-      </div>
+      </main>
     </div>
+
   );
 }

@@ -9,8 +9,7 @@ function App() {
   const isAuthenticated = !!localStorage.getItem("accessToken");
 
   return (
-    <div className="App bg-[#343541] min-h-screen">
-      <header className="App-header bg-[#343541] min-h-screen">
+    <div className="App bg-[#343541] h-screen">
         <Router>
           <Routes>
             <Route path="/auth" element={<AuthPage />} />
@@ -21,7 +20,6 @@ function App() {
             <Route path="*" element={<Navigate to="/auth" />} />
           </Routes>
         </Router>
-      </header>
     </div>
 
   );
