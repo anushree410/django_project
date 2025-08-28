@@ -25,7 +25,6 @@ export default function ChatbotUI({ messages, setMessages, sendMessage }) {
 
   return (
     <div className="flex flex-col h-full min-h-0 bg-[#252529]">
-      {/* Messages */}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 py-6">
         {messages?.map((msg, idx) => (
           <div

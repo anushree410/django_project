@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import ChatWindow from "../components/ChatWindow";
+import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from 'react-icons/tb';
 const API_BASE_URL = window.location.origin;
 
 export default function ChatLayout() {
   const [sessions, setSessions] = useState([]);
   const [activeSessionId, setActiveSessionId] = useState(null);
-
+  const [collapsed, setCollapsed]=useState(false);
   useEffect(() => {
     console.log('inside Chat layout');
     fetch(`${API_BASE_URL}/chatbot/session/`, {
@@ -65,8 +66,19 @@ export default function ChatLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#202123]">
-      {/* Sticky sidebar */}
-      <aside className="w-60 bg-[#202123] text-white border-r border-gray-800 sticky top-0 h-screen">
+      <aside className={`${
+          collapsed ? "w-16" : "w-60"
+        } bg-[#202123] text-white border-r border-gray-800 sticky top-0 h-screen transition-all duration-300`}
+      >
+        <div className="flex items-center justify-between p-2 border-b border-gray-700">
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-2 rounded hover:bg-gray-700 transition"
+          >
+
+            {collapsed ? <TbLayoutSidebarLeftExpand/> : <TbLayoutSidebarLeftCollapse/>}
+          </button>
+        </div>
         <div className="h-full overflow-y-auto overflow-x-hidden">
           <Sidebar
             sessions={sessions}
@@ -74,11 +86,10 @@ export default function ChatLayout() {
             onSelect={setActiveSessionId}
             onNew={createSession}
             onDelete={deleteSession}
+            collapsed={collapsed} // pass down if you want to shrink text/icons
           />
         </div>
       </aside>
-
-      {/* Chat pane */}
       <main className="flex-1 flex min-h-0">
         {activeSessionId ? (
           <ChatWindow sessionId={activeSessionId} />
