@@ -1,5 +1,6 @@
 import {useEffect} from "react";
-import { BsPencilSquare } from 'react-icons/bs';
+import { BsPencilSquare,BsSearch } from 'react-icons/bs';
+import { LuSquareLibrary } from 'react-icons/lu';
 export default function Sidebar({ sessions, activeId, onSelect, onNew, onDelete, collapsed}) {
   useEffect(() => {console.log('inside Side bar'); });
     return (
@@ -8,6 +9,16 @@ export default function Sidebar({ sessions, activeId, onSelect, onNew, onDelete,
          className="w-full truncate bg-transparent text-white text-sm rounded flex items-center justify-start hover:bg-gray-700 transition"
        >
          {collapsed ? <BsPencilSquare/> : <> <span className="ml-2"><BsPencilSquare /></span><span className="ml-2">New Chat</span></>}
+       </button>
+       <button onClick={onNew}
+         className="w-full truncate bg-transparent text-white text-sm rounded flex items-center justify-start hover:bg-gray-700 transition"
+       >
+         {collapsed ? <BsSearch/> : <> <span className="ml-2"><BsSearch /></span><span className="ml-2">Search Chat</span></>}
+       </button>
+       <button onClick={onNew}
+         className="w-full truncate bg-transparent text-white text-sm rounded flex items-center justify-start hover:bg-gray-700 transition"
+       >
+         {collapsed ? <LuSquareLibrary/> : <> <span className="ml-2"><LuSquareLibrary /></span><span className="ml-2">Library</span></>}
        </button>
 
        {sessions.map((s) => (
