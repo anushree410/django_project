@@ -55,7 +55,7 @@ export default function ChatbotUI({ messages, setMessages, sendMessage }) {
                 handleSend();
               }
             }}
-            placeholder="Send a message..."
+            placeholder="Send a message...??"
             rows={1}
             className="flex-1 resize-none rounded-lg px-4 py-2 bg-[#343541] focus:outline-none focus:ring focus:ring-[#19c37d]/50 text-white text-sm"
           />
