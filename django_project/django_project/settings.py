@@ -23,14 +23,22 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),  # Render will set this env var
-        conn_max_age=600,                   # Keeps DB connections alive
-        ssl_require=True                    # Enforces SSL on production
-    )
-}
-
+DATABASE_URL = os.getenv("DATABASE_URL")
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
