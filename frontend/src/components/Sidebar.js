@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { BsPencilSquare,BsSearch } from 'react-icons/bs';
 import { LuSquareLibrary } from 'react-icons/lu';
 import { HiDotsHorizontal } from "react-icons/hi";
+import { RiPencilFill } from "react-icons/ri";
+import { IoTrashOutline } from "react-icons/io5";
 export default function Sidebar({ sessions,activeId,onSelect,onNew,onDelete,collapsed,onUpdate}) {
   const [editingId, setEditingId] = useState(null);
   const [tempTopic, setTempTopic] = useState("");
@@ -62,14 +64,14 @@ export default function Sidebar({ sessions,activeId,onSelect,onNew,onDelete,coll
                 {menuOpenId === s.id && (
                   <div className="absolute right-0 mt-1 w-28 bg-[#2c2d30] rounded shadow-lg z-10"
                     onClick={(e) => e.stopPropagation()} >
-                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-600"
+                    <button className="w-full text-left text-sm hover:bg-gray-700 flex items-center justify-start"
                       onClick={() => {  setEditingId(s.id); setTempTopic(s.topic || "");
                         setMenuOpenId(null);
-                      }} >
+                      }} > <span className="ml-2"><RiPencilFill/></span>
                       Rename
                     </button>
-                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-600"
-                      onClick={() => { onDelete(s.id); setMenuOpenId(null); }}  >
+                    <button className="w-full text-left text-sm hover:bg-gray-700 flex items-center justify-start"
+                      onClick={() => { onDelete(s.id); setMenuOpenId(null); }}  > <span className="ml-2"><IoTrashOutline/></span>
                       Delete
                     </button>
                   </div>
