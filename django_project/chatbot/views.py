@@ -111,7 +111,10 @@ def ask_chatbot(request, session_id):
 @permission_classes([IsAuthenticated])
 def create_session(request):
     session = ChatSession.objects.create(user=request.user)
-    return Response({"id": session.id})
+    session.topic = f"Session {session.id}"
+    session.save(update_fields=["topic"])
+    serializer = ChatSessionSerializer(session)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @swagger_auto_schema(
     method='get',
