@@ -46,14 +46,13 @@ export default function Sidebar({ sessions,activeId,onSelect,onNew,onDelete,coll
           onClick={() => onSelect(s.id)} >
           {collapsed ? ("💬") : (
             <>
-              {/* Editable topic */}
               {editingId === s.id ? (
                 <input autoFocus value={tempTopic} onChange={(e) => setTempTopic(e.target.value)}
                   onBlur={() => handleUpdate(s.id, tempTopic)}
+                  onKeyDown={(e) => {if (e.key === "Enter") { handleUpdate(s.id, tempTopic)  }}}
                   className="flex-1 bg-transparent outline-none px-2" />
               ) : ( <span className="flex-1 truncate px-2">  { s.topic } </span>
               )}
-              {/* Dropdown menu */}
               <div className="relative">
                 <button onClick={(e) => {
                     e.stopPropagation(); setMenuOpenId(menuOpenId === s.id ? null : s.id);  }}
