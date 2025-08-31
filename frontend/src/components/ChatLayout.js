@@ -53,7 +53,7 @@ export default function ChatLayout() {
     if (res.ok) {
       setSessions(prev => prev.filter(s => s.id !== sessionId));
       if (activeSessionId === sessionId) {
-        setActiveSessionId(null); // reset if current one was deleted
+        setActiveSessionId(null);
       }
     }
   };
@@ -63,6 +63,23 @@ export default function ChatLayout() {
       console.log("✅ New active session:", activeSessionId);
     }
   }, [activeSessionId]);
+
+  const updateSessionTopic = async (sessionId, newTopic) => {
+    const response = await fetch(`${API_BASE_URL}/chatbot/session/${sessionId}/update/`, {
+    method: "PATCH",
+    headers: {Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    "Content-Type": "application/json",},
+    body: JSON.stringify({ topic: newTopic }),
+    });
+    if (!response.ok) {
+      throw new Error("Failed to update topic");
+    }
+    const updatedSession = await response.json();
+    setSessions((prevSessions) =>
+      prevSessions.map((s) => (s.id === sessionId ? updatedSession : s))
+    );
+    return updatedSession;
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#202123]">
@@ -85,6 +102,7 @@ export default function ChatLayout() {
             onNew={createSession}
             onDelete={deleteSession}
             collapsed={collapsed}
+            onUpdate={updateSessionTopic}
           />
         </div>
       </aside>

@@ -1,7 +1,23 @@
-import {useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { BsPencilSquare,BsSearch } from 'react-icons/bs';
 import { LuSquareLibrary } from 'react-icons/lu';
-export default function Sidebar({ sessions, activeId, onSelect, onNew, onDelete, collapsed}) {
+import { HiDotsHorizontal } from "react-icons/hi";
+export default function Sidebar({ sessions,activeId,onSelect,onNew,onDelete,collapsed,onUpdate}) {
+  const [editingId, setEditingId] = useState(null);
+  const [tempTopic, setTempTopic] = useState("");
+  const [menuOpenId, setMenuOpenId] = useState(null);
+  const handleUpdate = async (sessionId, newTopic) => {
+      try {
+        console.log("IN handle update");
+        console.log("Session id"+sessionId);
+        if (!newTopic.trim()) return;
+        await onUpdate(sessionId, newTopic);
+        setEditingId(null);
+        setTempTopic("");
+      } catch (err) {
+        console.error(err);
+      }
+    };
   useEffect(() => {console.log('inside Side bar'); });
     return (
      <div className="bg-[#202123] text-white flex flex-col space-y-2 p-2">
@@ -10,28 +26,60 @@ export default function Sidebar({ sessions, activeId, onSelect, onNew, onDelete,
        >
          {collapsed ? <BsPencilSquare/> : <> <span className="ml-2"><BsPencilSquare /></span><span className="ml-2">New Chat</span></>}
        </button>
-       <button onClick={onNew}
+       <button// onClick={}
          className="w-full truncate bg-transparent text-white text-sm rounded flex items-center justify-start hover:bg-gray-700 transition"
        >
          {collapsed ? <BsSearch/> : <> <span className="ml-2"><BsSearch /></span><span className="ml-2">Search Chat</span></>}
        </button>
-       <button onClick={onNew}
+       <button //onClick={}
          className="w-full truncate bg-transparent text-white text-sm rounded flex items-center justify-start hover:bg-gray-700 transition"
        >
          {collapsed ? <LuSquareLibrary/> : <> <span className="ml-2"><LuSquareLibrary /></span><span className="ml-2">Library</span></>}
        </button>
 
-       {sessions.map((s) => (
-         <div key={s.id} onClick={() => onSelect(s.id)}
+
+     {sessions.map((s) => (
+        <div key={s.id}
           className={`group cursor-pointer rounded text-white text-sm flex items-center justify-between hover:bg-gray-700 transition ${
-             activeId === s.id ? "bg-[#343541]" : "bg-transparent" }`}
-         > {collapsed ? "💬" :
-           <> <span className="flex-1 truncate px-2">Session {s.id}</span>
-              <button onClick={(e) => { e.stopPropagation();onDelete(s.id);}}
-               className="px-2 text-gray-400 opacity-0 group-hover:opacity-100 transition" title="Delete">
-              ✖ </button></>}
-         </div>
-       ))}
+            activeId === s.id ? "bg-[#343541]" : "bg-transparent"
+          }`}
+          onClick={() => onSelect(s.id)} >
+          {collapsed ? ("💬") : (
+            <>
+              {/* Editable topic */}
+              {editingId === s.id ? (
+                <input autoFocus value={tempTopic} onChange={(e) => setTempTopic(e.target.value)}
+                  onBlur={() => handleUpdate(s.id, tempTopic)}
+                  className="flex-1 bg-transparent outline-none px-2" />
+              ) : ( <span className="flex-1 truncate px-2">  { s.topic } </span>
+              )}
+              {/* Dropdown menu */}
+              <div className="relative">
+                <button onClick={(e) => {
+                    e.stopPropagation(); setMenuOpenId(menuOpenId === s.id ? null : s.id);  }}
+                  className="px-2 text-gray-400 opacity-0 group-hover:opacity-100 transition">
+                  <HiDotsHorizontal />
+                </button>
+                {menuOpenId === s.id && (
+                  <div className="absolute right-0 mt-1 w-28 bg-[#2c2d30] rounded shadow-lg z-10"
+                    onClick={(e) => e.stopPropagation()} >
+                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-600"
+                      onClick={() => {  setEditingId(s.id); setTempTopic(s.topic || "");
+                        setMenuOpenId(null);
+                      }} >
+                      Rename
+                    </button>
+                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-600"
+                      onClick={() => { onDelete(s.id); setMenuOpenId(null); }}  >
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      ))}
      </div>
     );
   }

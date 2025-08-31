@@ -12,7 +12,37 @@ from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from .models import ChatSession, ChatMessage
 from django.shortcuts import get_object_or_404
+from rest_framework import generics, permissions
+from .models import ChatSession
+from .serializers import ChatSessionSerializer
+
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+topic_param = openapi.Parameter(
+    "topic",
+    in_=openapi.IN_BODY,
+    description="New topic for the chat session",
+    type=openapi.TYPE_STRING,
+)
+
+
+@api_view(["PATCH"])
+@swagger_auto_schema(
+    request_body=ChatSessionSerializer,
+    responses={200: ChatSessionSerializer, 404: "Not Found"},
+)
+@permission_classes([IsAuthenticated])
+def update_chat_session(request, session_id):
+    try:
+        session = ChatSession.objects.get(pk=session_id, user=request.user)
+    except ChatSession.DoesNotExist:
+        return Response({"error": "Session not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = ChatSessionSerializer(session, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
 @swagger_auto_schema(
@@ -130,8 +160,8 @@ def session_history(request, session_id):
 @permission_classes([IsAuthenticated])
 def list_sessions(request):
     sessions = ChatSession.objects.filter(user=request.user).order_by("-created_at")
-    data = [{"id": s.id, "created_at": s.created_at} for s in sessions]
-    return Response(data)
+    serializer = ChatSessionSerializer(sessions, many=True)
+    return Response(serializer.data)
 
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])

@@ -4,9 +4,17 @@ from django.contrib.auth.models import User
 class ChatSession(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_sessions')
     created_at = models.DateTimeField(auto_now_add=True)
+    topic = models.CharField(max_length=255, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # save once to get an ID
+        if not self.topic:
+            self.topic = f"Session {self.id}"
+            super().save(update_fields=["topic"])  # update only topic
 
     def __str__(self):
-        return f"Session {self.id} for {self.user.username}"
+        return self.topic or f"Session {self.id} for {self.user.username}"
+
 
 class ChatMessage(models.Model):
     session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name='messages')
