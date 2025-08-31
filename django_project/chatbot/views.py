@@ -176,3 +176,9 @@ def delete_session(request, session_id):
     session = get_object_or_404(ChatSession, id=session_id, user=request.user)
     session.delete()
     return Response({"message": "Session deleted"})
+
+
+def share_session(request, share_uuid):
+    session = get_object_or_404(ChatSession, share_uuid=share_uuid)
+    messages = session.messages.order_by('timestamp')
+    return render(request, 'share.html', {'session': session,'messages': messages})

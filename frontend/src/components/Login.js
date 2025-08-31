@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { login } from './api';
+import { useState } from 'react'
+import { login } from './api'
 
 function LoginPage() {
   const [username, setUsername] = useState('');

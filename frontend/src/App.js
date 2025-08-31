@@ -1,10 +1,7 @@
-import './App.css';
-import AuthPage from './components/AuthPage';
-import ChatLayout from "./components/ChatLayout";
-import {
-  HashRouter as Router,
-  Routes, Route, Navigate
-} from "react-router-dom";
+import './App.css'
+import AuthPage from './components/AuthPage'
+import ChatLayout from "./components/ChatLayout"
+import { HashRouter as Router, Routes, Route, Navigate} from "react-router-dom"
 function App() {
   const isAuthenticated = !!localStorage.getItem("accessToken");
 

@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { LuSendHorizontal } from "react-icons/lu";
+import { useState, useRef, useEffect } from "react"
+import { LuSendHorizontal } from "react-icons/lu"
 
 export default function ChatbotUI({ messages, setMessages, sendMessage }) {
   const [input, setInput] = useState("");

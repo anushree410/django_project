@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { BsPencilSquare,BsSearch } from 'react-icons/bs';
-import { LuSquareLibrary } from 'react-icons/lu';
-import { HiDotsHorizontal } from "react-icons/hi";
-import { RiPencilFill } from "react-icons/ri";
-import { IoTrashOutline } from "react-icons/io5";
-import { TbLogout } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react"
+import { BsPencilSquare,BsSearch } from 'react-icons/bs'
+import { LuSquareLibrary } from 'react-icons/lu'
+import { HiDotsHorizontal } from "react-icons/hi"
+import { RiPencilFill } from "react-icons/ri"
+import { IoTrashOutline } from "react-icons/io5"
+import { TbLogout } from "react-icons/tb"
+import { useNavigate } from "react-router-dom"
+import { FiShare } from "react-icons/fi"
+import ShareDialog from "./ShareDialog"
 export default function Sidebar({ sessions,activeId,onSelect,onNew,onDelete,collapsed,onUpdate}) {
   const navigate=useNavigate();
   const [editingId, setEditingId] = useState(null);
   const [tempTopic, setTempTopic] = useState("");
   const [menuOpenId, setMenuOpenId] = useState(null);
+  const [open, setOpen] = useState(false)
   const handleUpdate = async (sessionId, newTopic) => {
       try {
         console.log("IN handle update");
@@ -79,19 +82,23 @@ export default function Sidebar({ sessions,activeId,onSelect,onNew,onDelete,coll
                     onClick={(e) => e.stopPropagation()} >
                     <button className="w-full text-left text-sm hover:bg-gray-700 flex items-center justify-start"
                       onClick={() => {  setEditingId(s.id); setTempTopic(s.topic || "");
-                        setMenuOpenId(null);
-                      }} > <span className="ml-2"><RiPencilFill/></span>
+                        setMenuOpenId(null); }} > <span className="ml-2"><RiPencilFill/></span>
                       Rename
                     </button>
                     <button className="w-full text-left text-sm hover:bg-gray-700 flex items-center justify-start"
                       onClick={() => { onDelete(s.id); setMenuOpenId(null); }}  > <span className="ml-2"><IoTrashOutline/></span>
                       Delete
                     </button>
+                    <button className="w-full text-left text-sm hover:bg-gray-700 flex items-center justify-start"
+                      onClick={() => { setOpen(true); }}  > <span className="ml-2"><FiShare/></span>
+                      Share
+                    </button>
                   </div>
                 )}
               </div>
             </>
           )}
+        <ShareDialog open={open}  onClose={() => setOpen(false)} shareUuid={s.share_uuid}/>
         </div>
       ))}
      </div>

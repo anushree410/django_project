@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import ChatbotUI from "./ChatbotUI";
+import React, { useEffect, useState } from "react"
+import ChatbotUI from "./ChatbotUI"
 export default function ChatWindow({ sessionId }) {
   const API_BASE_URL = window.location.origin;
   const [messages, setMessages] = useState([]);

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
-import ChatWindow from "../components/ChatWindow";
-import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from 'react-icons/tb';
+import React, { useEffect, useState } from "react"
+import Sidebar from "../components/Sidebar"
+import ChatWindow from "../components/ChatWindow"
+import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from 'react-icons/tb'
 const API_BASE_URL = window.location.origin;
 
 export default function ChatLayout() {
