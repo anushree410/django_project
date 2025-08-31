@@ -4,7 +4,10 @@ import { LuSquareLibrary } from 'react-icons/lu';
 import { HiDotsHorizontal } from "react-icons/hi";
 import { RiPencilFill } from "react-icons/ri";
 import { IoTrashOutline } from "react-icons/io5";
+import { TbLogout } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 export default function Sidebar({ sessions,activeId,onSelect,onNew,onDelete,collapsed,onUpdate}) {
+  const navigate=useNavigate();
   const [editingId, setEditingId] = useState(null);
   const [tempTopic, setTempTopic] = useState("");
   const [menuOpenId, setMenuOpenId] = useState(null);
@@ -20,6 +23,12 @@ export default function Sidebar({ sessions,activeId,onSelect,onNew,onDelete,coll
         console.error(err);
       }
     };
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    alert("Logged out!");
+    navigate('/auth');
+  };
   useEffect(() => {console.log('inside Side bar'); });
     return (
      <div className="bg-[#202123] text-white flex flex-col space-y-2 p-2">
@@ -38,7 +47,11 @@ export default function Sidebar({ sessions,activeId,onSelect,onNew,onDelete,coll
        >
          {collapsed ? <LuSquareLibrary/> : <> <span className="ml-2"><LuSquareLibrary /></span><span className="ml-2">Library</span></>}
        </button>
-
+       <button onClick={handleLogout}
+         className="w-full truncate bg-transparent text-white text-sm rounded flex items-center justify-start hover:bg-gray-700 transition"
+       >
+         {collapsed ? <TbLogout/> : <> <span className="ml-2"><TbLogout /></span><span className="ml-2">Log out</span></>}
+       </button>
 
      {sessions.map((s) => (
         <div key={s.id}
