@@ -15,7 +15,7 @@ export default function ShareDialog({ open, onClose, shareUuid }) {
     instagram: `https://www.instagram.com/`, // no direct URL scheme, user pastes manually
   }
   return (
-    <Dialog open={open} onOpenChange={onClose}  PaperProps={{ style: {backgroundColor: "#2c2d30", borderRadius: "1rem", color: "white", padding: "1.5rem"}}} >
+    <Dialog open={open} onOpenChange={onClose}  PaperProps={{ style: {backgroundColor: "#2c2d30", borderRadius: "1rem", color: "white", padding: "1.5rem"}}}
       BackdropProps={{style: { backgroundColor: "rgba(0,0,0,0.7)" }}}>
       <DialogContent >
         <div className="flex items-center justify-between">
