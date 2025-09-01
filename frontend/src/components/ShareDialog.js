@@ -15,16 +15,15 @@ export default function ShareDialog({ open, onClose, shareUuid }) {
     instagram: `https://www.instagram.com/`, // no direct URL scheme, user pastes manually
   }
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-[#2c2d30] shadow-lg rounded-2xl text-white ">
-        <DialogTitle>
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Share Session</h3>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <CloseIcon className="h-4 w-4" />
-            </Button>
-          </div>
-        </DialogTitle>
+    <Dialog open={open} onOpenChange={onClose}  PaperProps={{ style: {backgroundColor: "#2c2d30", borderRadius: "1rem", color: "white", padding: "1.5rem"}}} >
+      BackdropProps={{style: { backgroundColor: "rgba(0,0,0,0.7)" }}}>
+      <DialogContent >
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Share Session</h3>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <CloseIcon className="h-4 w-4" />
+          </Button>
+        </div>
         <div className="space-y-4 mt-4">
           <div className="flex items-center space-x-2 border rounded-lg px-3 py-2">
             <span className="truncate text-sm">{shareUrl}</span>
