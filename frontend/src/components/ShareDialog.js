@@ -12,7 +12,7 @@ export default function ShareDialog({ open, onClose, shareUuid }) {
   const shareLinks = {
     whatsapp: `https://wa.me/?text=${encodeURIComponent(shareUrl)}`,
     twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}`,
-    instagram: `https://www.instagram.com/`, // no direct URL scheme, user pastes manually
+    instagram: `https://www.instagram.com/`,
   }
   return (
     <Dialog open={open} onOpenChange={onClose}  PaperProps={{ style: {backgroundColor: "#2c2d30", borderRadius: "1rem", color: "white", padding: "1.5rem"}}}
