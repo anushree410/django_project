@@ -1,5 +1,5 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-import { Copy, Share2, X as CloseIcon } from "lucide-react"
+import { Dialog, DialogContent, Button } from '@mui/material';
+import { Copy, X as CloseIcon } from "lucide-react"
 import { FaWhatsapp, FaInstagram } from "react-icons/fa"
 import { FaXTwitter } from "react-icons/fa6"
 
